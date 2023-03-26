@@ -14,4 +14,6 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['beta', 'compute', 'instances', 'add-tags', 'someinstance', '--tags', 'docker']
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['beta', 'compute', 'ssh', '--zone', 'us-central1-a', 'someinstance', '--command', 'sudo docker run -d -p 80:80 gcr.io/majornews/majornewsdata']
+    args: ['beta', 'compute', 'instances', 'add-tags', 'someinstance',
+         '--tags', 'http-server,https-server',
+         '--zone=us-central1-a']
