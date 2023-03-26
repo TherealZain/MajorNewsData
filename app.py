@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime 
 import webScraper
 from flask import request, jsonify
+import os
 
 
 
@@ -52,4 +53,4 @@ def api_fetch_all_articles():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
