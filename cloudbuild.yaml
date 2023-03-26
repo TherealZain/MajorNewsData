@@ -10,14 +10,8 @@ steps:
     args: ['push', 
            'gcr.io/majornews/majornewsdata:latest']
 
-  # Entrypoint, timeout and environment variables
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'gcloud'
-    timeout: 240s
-    args: ['compute', 'instances', 
-           'create-with-container', 'my-vm-name',
-           '--container-image', 
-           'gcr.io/majornews/majornewsdata:latest']
-    env:
-      - 'CLOUDSDK_COMPUTE_REGION=us-central1'
-      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+  # Start container on existing VM instance
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['beta', 'compute', 'instances', 'add-tags', '<INSTANCE_NAME>', '--tags', 'docker']
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['beta', 'compute', 'ssh', '--zone', 'us-central1-a', '<INSTANCE_NAME>', '--command', 'sudo docker run -d -p 80:80 gcr.io/majornews/majornewsdata']
