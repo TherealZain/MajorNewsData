@@ -2,13 +2,13 @@ steps:
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 
-           'gcr.io/majornews/MajorNewsData:latest', 
+           'gcr.io/majornews/majornewsdata:latest', 
            '.']
 
   # Docker Push
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
-           'gcr.io/majornews/MajorNewsData:latest']
+           'gcr.io/majornews/majornewsdata:latest']
 
   # Entrypoint, timeout and environment variables
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -17,7 +17,7 @@ steps:
     args: ['compute', 'instances', 
            'create-with-container', 'my-vm-name',
            '--container-image', 
-           'gcr.io/majornews/MajorNewsData:latest']
+           'gcr.io/majornews/majornewsdata:latest']
     env:
       - 'CLOUDSDK_COMPUTE_REGION=us-central1'
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
