@@ -8,7 +8,7 @@ steps:
   # Docker Push
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
-           'us-central1-docker.pkg.dev/majorenews/my-docker-repo/myimage']
+           'us-central1-docker.pkg.dev/majornews/my-docker-repo/myimage']
 
   # Entrypoint, timeout and environment variables
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
