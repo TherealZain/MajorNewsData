@@ -1,46 +1,41 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 import requests
 from bs4 import BeautifulSoup
+from fake_useragent import UserAgent
 import json
 import re
-import flask
 
 
+ua = UserAgent()
 headers = {'User Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"}
+randomHeaders = {'User-Agent': ua.random}
 
 """This is extracting data from purely just looking at whether something has headline within it"""
 """ headlines = re.findall(r'"headline":"(.*?)"', text)
 print(headlines) """
 
 
-def fetchCNN(cnnMainLink):
+def fetchCNN(cnnMainLink, category):
     # This code makes a request to the CNN main Tech/Business site to get the whole document page
     url = cnnMainLink
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     
     cnn_links = []
-    cnn_href_array = []
     # Gathers all the links from the page of news articles
     for link in soup.find_all('a', class_='container__link container_lead-plus-headlines-with-images__link'):
         link_info = {}
         link_info['text'] = link.text
         link_info['href'] = link.get('href')
         cnn_links.append(link_info)
-        cnn_href_array.append(link['href'])
+        # cnn_href_array.append(link['href'])
 
-    for link in cnn_links:
-        print("The Link --> ", link)
 
-    print(cnn_href_array)
     cnn_articles = []
     # Gathers all the data of the articles and stores them in cnn_articles
-    for hrefLink in cnn_href_array:
+    for hrefLink in cnn_links:
     
-        url = "https://cnn.com"+hrefLink
-        print(url)
+        url = "https://cnn.com"+hrefLink['href']
+        #print(url)
         response=requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
         title = soup.find('h1', {'id': 'maincontent'}).text
@@ -50,15 +45,21 @@ def fetchCNN(cnnMainLink):
         for content in article_content:
             main_text += content.get_text()
             main_text = main_text.replace('\n', '')
+            main_text = main_text.encode('ascii', 'ignore').decode('ascii')
+            
             
 
         # Create a dictionary with the article URL and main text, and add it to the cnn_articles list
         article = {"url": url, "title": title, "main_text": main_text}
         cnn_articles.append(article)
 
-        print(cnn_articles)
+        category_dict = {category: cnn_articles}
 
-    return cnn_articles
+
+        json_cnn = json.dumps(category_dict)
+
+        
+    return json_cnn
 
 
 
@@ -108,7 +109,7 @@ def fetchGizmodo(gizmodoUrl):
         
 
 
-fetchGizmodo("https://gizmodo.com/science")
+fetchCNN("https://www.cnn.com/business/tech", "tech")
 
 
 
