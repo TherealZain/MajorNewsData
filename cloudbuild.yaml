@@ -12,11 +12,6 @@ steps:
 
   # Start container on existing VM instance
   - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        gcloud beta compute ssh someinstance --zone=us-central1-a --command='docker run -p 80:80 gcr.io/majornews/majornewsdata:latest'
-    id: 'docker-run'
-    waitFor:
-      - '-'
+    args: ['beta', 'compute', 'instances', 'add-tags', 'someinstance',
+         '--tags', 'http-server,https-server',
+         '--zone=<ZONE>']
