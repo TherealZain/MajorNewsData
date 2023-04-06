@@ -45,11 +45,18 @@ def api_fetch_all_articles():
     source = request.args.get('source', 'all')
 
     if source in all_articles:
-        return jsonify(all_articles[source])
+        response = jsonify(all_articles[source])
     elif source == 'all':
-        return jsonify(all_articles)
+        response = jsonify(all_articles)
     else:
-        return jsonify({"error": "Invalid source"}), 400
+        response = jsonify({"error": "Invalid source"}), 400
+
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    return response
+    
+
+
 
 
 if __name__ == '__main__':
