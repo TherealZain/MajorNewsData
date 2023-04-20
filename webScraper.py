@@ -81,7 +81,7 @@ def fetchTechCrunchSections(techCrunchLink):
         tech_crunch_links.append({'title': title})
         tech_crunch_links.append({"main_text": article_content})
 
-    print(tech_crunch_links)
+    return(tech_crunch_links)
    
 
 def fetchGizmodo(gizmodoUrl):

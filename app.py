@@ -13,6 +13,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 db= SQLAlchemy(app)
 
 cnn_articles = webScraper.fetchCNN("https://www.cnn.com/business/tech", "tech")
+techcrunch_articles = webScraper.fetchTechCrunchSections("https://techcrunch.com/category/artificial-intelligence/")
 
 all_articles = {
     "cnn": cnn_articles
@@ -40,8 +41,8 @@ def helloWorld():
     return 'Hello World'
 
 
-@app.route('/get_articles', methods=['GET'])
-def api_fetch_all_articles():
+@app.route('/get_articles_cnn', methods=['GET'])
+def api_fetch_cnn_articles():
     source = request.args.get('source', 'all')
 
     if source in all_articles:
@@ -56,7 +57,9 @@ def api_fetch_all_articles():
     return response
     
 
-
+@app.route('/get_articles_techcrunch', methods=['GET'])
+def api_fetch_techcrunch_articles():
+    return jsonify(techcrunch_articles)
 
 
 if __name__ == '__main__':
