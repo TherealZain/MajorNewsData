@@ -14,6 +14,10 @@ db= SQLAlchemy(app)
 
 cnn_articles = webScraper.fetchCNN("https://www.cnn.com/business/tech", "tech")
 techcrunch_articles = webScraper.fetchTechCrunchSections("https://techcrunch.com/category/artificial-intelligence/")
+investopedia_articles = webScraper.fetchInvestopedia( "https://www.investopedia.com/", "finance")
+yahooFinance_articles = webScraper.fetchYahooFinance(
+    "https://finance.yahoo.com/", "finance")
+
 
 all_articles = {
     "cnn": cnn_articles
@@ -62,5 +66,13 @@ def api_fetch_techcrunch_articles():
     return jsonify(techcrunch_articles)
 
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+# Define a route to fetch Investopedia articles
+@app.route('/get_articles_investopedia', methods=['GET'])
+def api_fetch_investopedia_articles():
+    return jsonify(investopedia_articles)
+
+
+# Define a route to fetch Yahoo Finance articles
+@app.route('/get_articles_yahoofinance', methods=['GET'])
+def api_fetch_yahoofinance_articles():
+    return jsonify(yahooFinance_articles)

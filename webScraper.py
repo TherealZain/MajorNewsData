@@ -38,7 +38,8 @@ def fetchCNN(cnnMainLink, category):
         #print(url)
         response=requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
-        title = soup.find('h1', {'id': 'maincontent'}).text
+        title_tag = soup.find('h1', {'id': 'maincontent'})
+        title = title_tag.text if title_tag else ''
         title = title.replace('\n', "")
         article_content = soup.find_all('div', class_="article__content")
         main_text = ""
@@ -104,12 +105,65 @@ def fetchGizmodo(gizmodoUrl):
 
     print(gizmodo_articles)
 
+
+
+
+def fetchYahooFinance(link, type):
+    response = requests.get(link)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    print(soup.prettify())
+    a_tags = soup.find_all(
+        'a', class_="js-content-viewer Fw(b) Td(n) wafer-destroyed")
+    print(a_tags)
+    hrefs = [a.get('href') for a in a_tags]
+    yahoo_articles = []
+    for href in hrefs:
+        print(href)
+        href_response = requests.get(href)
+        soup_for_articles = BeautifulSoup(href_response.text, "html.parser")
+        title_tag = soup_for_articles.find('h1', {'data-test-locator': 'headline'}).get_text
+        article_content_div = soup_for_articles.find( 'div', class_= 'caas-body')
+        paragraphs = article_content_div.find_all('p')
+        article = {'href': href, 'title': title_tag,
+                   'main_text': [p.text for p in paragraphs]}
+        yahoo_articles.append(article) 
+    return yahoo_articles 
     
-    # print(gizmodo_articles)
+   
+    
         
+def fetchInvestopedia(link, type):
+    response = requests.get(link)
+    soup= BeautifulSoup(response.text, 'html.parser')
+    soup_div = soup.find('div', class_="comp home-hero__wrapper mntl-block")
+    soup_links = soup_div.find_all('a')
+    invest_articles = []
+    for link in soup_links:
+        href = link.get('href')
+        href_response = requests.get(href)
+        soup_for_articles = BeautifulSoup(href_response.text, "html.parser")
+        title_tag = soup_for_articles.find( 'h1', class_="comp article-heading mntl-text-block").text
+        article_content_div = soup_for_articles.find('div', class_= 'comp article-body mntl-block')
+        article_body_content_div = article_content_div.find(
+            'div', class_='comp article-body-content mntl-sc-page mntl-block')
+        paragraphs = article_body_content_div.find_all('p')
+
+        article = {'href': href, 'title': title_tag,
+                   'main_text': [p.text for p in paragraphs]}
+        invest_articles.append(article)
+        """ for tag in article_content_div.children:
+            if tag.name in ['h2', 'h3']:
+                current_heading = tag.text
+            elif tag.name == 'p' and current_heading:
+                content_list.append(
+                    {'heading': current_heading, 'main_text': tag.text})
+                current_heading = None
+        article = {'href': href, 'title': title_tag, 'content': content_list}
+        invest_articles.append(article) """
+    return invest_articles
 
 
-fetchCNN("https://www.cnn.com/business/tech", "tech")
+
 
 
 
