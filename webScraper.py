@@ -111,7 +111,7 @@ def fetchGizmodo(gizmodoUrl):
 def fetchYahooFinance(link, type):
     response = requests.get(link)
     soup = BeautifulSoup(response.text, 'html.parser')
-    print(soup.prettify())
+    
     a_tags = soup.find_all(
         'a', class_="js-content-viewer Fw(b) Td(n) wafer-destroyed")
     print(a_tags)

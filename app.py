@@ -76,3 +76,10 @@ def api_fetch_investopedia_articles():
 @app.route('/get_articles_yahoofinance', methods=['GET'])
 def api_fetch_yahoofinance_articles():
     return jsonify(yahooFinance_articles)
+
+
+if __name__ == '__main__':
+    with app.app_context():
+        print("Executing code inside the app context...")
+        print("Current app instance: ", flask.current_app)
+    app.run()
