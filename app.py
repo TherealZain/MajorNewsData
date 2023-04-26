@@ -82,4 +82,4 @@ if __name__ == '__main__':
     with app.app_context():
         print("Executing code inside the app context...")
         print("Current app instance: ", flask.current_app)
-    app.run()
+    app.run(debug=True, port=8080)
